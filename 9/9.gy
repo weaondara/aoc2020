@@ -1,0 +1,50 @@
+def lines = []
+File file = new File("input")
+def line
+file.withReader { reader ->
+  while ((line = reader.readLine()) != null) {
+    if(line.length() > 0)
+      lines.add(Long.parseLong(line))
+  }
+}
+
+
+//task 1
+def invalid
+for (i = 25; i < lines.size(); i++) {
+  def found = false
+  outer: 
+  for (m = 1; m <= 25; m++) {
+    for (n = 1; n < m; n++) {
+      if (lines[i - m] + lines[i - n] == lines[i]) {
+        found = true
+        break outer
+      }
+    }
+  }
+  
+  if(!found) {
+    invalid = lines[i]
+    println "Task 1: " + invalid
+    break
+  }
+}
+
+
+//task 2
+for (i = 0; i < lines.size(); i++) {
+  def sum = 0
+  for (j = i; j < lines.size(); j++) {
+    sum += lines[j]
+    if(sum < invalid) {
+      continue;
+    } else if (sum == invalid) {
+      def min = lines.subList(i, j + 1).min()
+      def max = lines.subList(i, j + 1).max()
+      println "Task 2: " + (min + max)
+      return;
+    } else if (sum > invalid) {
+      break;
+    }
+  }
+}
